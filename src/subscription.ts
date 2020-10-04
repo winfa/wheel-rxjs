@@ -1,10 +1,11 @@
 import { Observer } from "./observer"
 
 export class Subscription<T> {
-    constructor(private observer: Observer<T>) {
+    constructor(private observer: Observer<T>, private onUnsubscribe?: (observer: Observer<T>) => void) {
     }
 
     unsubscribe() {
         this.observer.complete();
+        this.onUnsubscribe && this.onUnsubscribe(this.observer);
     }
 }

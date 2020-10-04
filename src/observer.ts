@@ -1,13 +1,7 @@
 export class Observer<T> {
-    constructor(private subscribedAction: ((val: T) => void) | null) { }
-
-    next(val: T) {
-        this.subscribedAction && this.subscribedAction(val);
-    }
-
-    complete() {
-        this.subscribedAction = null;
-    }
-
-    error() { }
+    constructor(
+        public next: (val: T) => void,
+        public err: (error: Error) => void,
+        public complete: () => void,
+    ) { }
 }

@@ -1,13 +1,5 @@
-import { Observable } from "./observable";
-import { Observer } from "./observer"
+import { interval, Observable, of } from "./observable";
+import { map, take } from "./operators";
 
-const test$ = new Observable((observer: Observer<number>) => {
-    observer.next(4);
-    observer.next(5);
-});
 
-const subscription = test$.subscribe((val) => {
-    console.log(val);
-});
-
-subscription.unsubscribe();
+interval(1000).pipe(take(3), map((val) => val + 10)).subscribe(console.log);
