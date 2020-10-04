@@ -7,11 +7,8 @@ export class Observable<T> {
         private onUnsubscribe?: (observer: Observer<T>) => void
     ) { }
 
-    subscribe(next: (val: T) => any, error?: (err: Error) => void, complete?: () => void) {
-        const observer = new Observer<T>(
-            next,
-            error || ((err: Error) => { }),
-            complete || (() => { }));
+    subscribe(...args: [next: (val: T) => (any | void), error?: ((err: Error) => void), complete?: (() => void)] | [Observer<T>]) {
+        const observer = typeof args[0] === "function" ? new Observer<T>(args[0], args[1], args[2]) : args[0];
 
         this.onSubscribe(observer);
         return new Subscription(observer, this.onUnsubscribe);
@@ -39,7 +36,6 @@ export function interval(millisecond: number) {
         currentInterval = setInterval(() => {
             observer.next(number);
             number = number + 1;
-            console.log(number, 'generating number');
         }, millisecond);
     }, () => {
         clearTimeout(currentInterval);
