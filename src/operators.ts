@@ -13,6 +13,7 @@ export function take(num: number): (observable: Observable<any>) => Observable<a
         let times = 0;
         return new Observer((val) => {
             if (times <= num) {
+                times = times + 1;
                 observer.next(val);
             } else {
                 observer.complete();
@@ -64,4 +65,20 @@ function observableOperator(observerOperator: (observer: Observer<any>) => Obser
             subscription.unsubscribe();
         })
     }
+}
+
+export function switchMap(project: (val: any) => Observable<any>): (observable: Observable<any>) => Observable<any> {
+    return observableOperator((observer: Observer<any>) => {
+        let newObservable: Observable<any>;
+        let subscription: Subscription<any>;
+
+        return new Observer((val) => {
+            subscription && subscription.unsubscribe();
+            newObservable = project(val);
+
+            subscription = newObservable.subscribe((newVal) => {
+                observer.next(newVal);
+            });
+        });
+    });
 }

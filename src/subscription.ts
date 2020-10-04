@@ -5,6 +5,7 @@ export class Subscription<T> {
     }
 
     unsubscribe() {
+        this.observer.next = () => { };
         this.observer.complete();
         this.onUnsubscribe && this.onUnsubscribe(this.observer);
     }

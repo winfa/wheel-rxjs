@@ -1,8 +1,24 @@
 export class Observer<T> {
+    private closed: boolean = true;
+
     constructor(
-        public next: (val: T) => void,
-        public error: (error: Error) => void = ((error) => { console.log(error) }),
-        public complete: () => void = (() => { }),
+        private onNext: (val: T) => void,
+        private onError: (error: Error) => void = ((error) => { console.log(error) }),
+        private onComplete: () => void = (() => { }),
     ) {
+    }
+
+    next(val: T): void {
+        this.closed && this.onNext(val);
+    }
+
+    error(error: Error): void {
+        this.closed = true;
+        this.onError(error);
+    }
+
+    complete() {
+        this.closed = true;
+        this.onComplete();
     }
 }
