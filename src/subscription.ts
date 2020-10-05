@@ -9,4 +9,8 @@ export class Subscription<T> {
         this.observer.complete();
         this.onUnsubscribe && this.onUnsubscribe(this.observer);
     }
+
+    get closed() {
+        return this.observer.closed;
+    }
 }

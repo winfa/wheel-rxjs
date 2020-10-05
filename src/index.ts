@@ -1,13 +1,15 @@
 import { interval, Observable, of } from "./observable";
-import { filter, map, reduce, scan, switchMap, take } from "./operators";
+import { Observer } from "./observer";
+import { exhaustMap, filter, map, reduce, scan, switchMap, take } from "./operators";
+import { Subject } from "./subject";
 
+const test$ = interval(1000).pipe(take(3));
 
-// interval(1000).pipe(take(6), filter((val) => val % 2 === 0), map((val) => `${val} --- 1`)).subscribe(console.log);
-const test1$ = interval(1000).pipe(take(6), filter((val) => val % 2 === 0), map((val) => `${val} --- 1`));
-const test2$ = interval(3000).pipe(take(3));
+// test$.subscribe((val) => { console.log(val, '......1..........') });
+// test$.subscribe((val) => { console.log(val, '......2..........') });
 
-function getTest(number: number) {
-    return interval(1000).pipe(take(6), map((val) => `${val} --- ${number}`));
-}
+const subject = new Subject();
+subject.subscribe((val) => { console.log(val, '......1..........') });
+subject.subscribe((val) => { console.log(val, '......2..........') });
 
-test2$.pipe(switchMap(getTest)).subscribe(console.log);
+test$.subscribe(subject);
